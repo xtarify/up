@@ -27,6 +27,8 @@ jobs:
             git add commit-log.txt
             git commit -m "Automated commit #$i: $(date)"
           done
+            git pull --rebase
+            git push https://xtarify:${TOKEN}@github.com/xtarify/up.git
 
       - name: Push con token personal
         env:
