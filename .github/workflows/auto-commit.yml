@@ -27,12 +27,11 @@ jobs:
             git add commit-log.txt
             git commit -m "Automated commit #$i: $(date)"
           done
-            git pull --rebase
-            git push https://xtarify:${TOKEN}@github.com/xtarify/up.git
+            
 
-      - name: Push con token personal
+      - name: Pull y Push con Token
         env:
-          PERSONAL_TOKEN: ${{ secrets.MY_GH_PAT }}
+          TOKEN: ${{ secrets.MY_GH_PAT }}
         run: |
-          git remote set-url origin https://x-access-token:${PERSONAL_TOKEN}@github.com/${{ github.repository }}
-          git push origin HEAD:main
+          git pull --rebase
+          git push https://xtarify:${TOKEN}@github.com/xtarify/up.git
