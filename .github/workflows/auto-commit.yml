@@ -1,0 +1,27 @@
+name: Auto Commits
+
+on:
+  schedule:
+    - cron: "0 */2 * * *" # Se ejecuta cada 2 horas
+
+jobs:
+  auto-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      
+      - name: Configurar Git
+        run: |
+          git config --global user.name "AutoCommit Bot"
+          git config --global user.email "autocommit@github.com"
+
+      - name: Generar commits aleatorios
+        run: |
+          COMMITS=$(( RANDOM % 10 + 5 ))  # Genera entre 5 y 14 commits por ejecución
+          for i in $(seq 1 $COMMITS); do
+            echo "Auto commit #$i on $(date)" >> commit-log.txt
+            git add commit-log.txt
+            git commit -m "Automated commit #$i: $(date)"
+          done
+          git push
