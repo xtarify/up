@@ -2,8 +2,8 @@ name: Auto Commits
 
 on:
   schedule:
-    - cron: "0 */2 * * *"  # Se ejecuta cada 2 horas automáticamente
-  workflow_dispatch:        # Permite ejecutarlo manualmente desde GitHub
+    - cron: "0 */2 * * *"  # Se ejecuta cada 2 horas
+  workflow_dispatch:
 
 jobs:
   auto-commit:
@@ -12,8 +12,6 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Configurar Git
         run: |
@@ -22,16 +20,16 @@ jobs:
 
       - name: Generar commits aleatorios
         run: |
-          COMMITS=$(( RANDOM % 10 + 5 ))  # Genera entre 5 y 14 commits por ejecución
+          COMMITS=$(( RANDOM % 10 + 5 ))
           for i in $(seq 1 $COMMITS); do
             echo "Auto commit #$i on $(date)" >> commit-log.txt
             git add commit-log.txt
             git commit -m "Automated commit #$i: $(date)"
           done
 
-      - name: Push commits
+      - name: Push con token personal
         env:
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PERSONAL_TOKEN: ${{ secrets.MY_GH_PAT }}
         run: |
-          git remote set-url origin https://x-access-token:${TOKEN}@github.com/${{ github.repository }}
+          git remote set-url origin https://x-access-token:${PERSONAL_TOKEN}@github.com/${{ github.repository }}
           git push origin HEAD:main
